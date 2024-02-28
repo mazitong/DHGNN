@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from models import HNHNConv
 
 class HGNN(nn.Module):
-    def __init__(self, nums,in_ch, layer, dropout=0.5):#输入维度（特征向量维度），类别数，隐藏层维度
+    def __init__(self, nums,in_ch, layer, dropout=0.5):
         super(HGNN, self).__init__()
         self.dropout = dropout
         self.layers = eval(layer)
@@ -25,14 +25,12 @@ class HGNN(nn.Module):
 
         if x==[]:
             x=self.embedding_dict['emb']
-        #hgc1为HGNN_conv类，输入x，G，调用类内的forward函数
-        x = F.relu(self.hgc1(x, G))#激活函数relu
-        #x=self.hgc1(x,G)
-        #x=F.tanh(x)
-        #print("self.hgc1 卷积一次",x.size())
-        x = F.dropout(x, self.dropout)#随机丢弃
+
+        x = F.relu(self.hgc1(x, G))
+
+        x = F.dropout(x, self.dropout)
         x = self.hgc2(x, G)
-        #np.save("X_fx.npy",x.detach().numpy())
+
         return x
 '''
 

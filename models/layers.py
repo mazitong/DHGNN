@@ -13,9 +13,9 @@ from torch_geometric.nn.inits import glorot, zeros
 from typing import Optional, Union, List, Tuple, Dict, Any, TYPE_CHECKING
 
 class HGNN_conv(nn.Module):
-    def __init__(self, in_ft, out_ft, bias=True):#输入维度、输出维度
+    def __init__(self, in_ft, out_ft, bias=True):
         super(HGNN_conv, self).__init__()
-        self.weight = Parameter(torch.Tensor(in_ft, out_ft))#weight与输入矩阵相乘，转换维度为n×outft
+        self.weight = Parameter(torch.Tensor(in_ft, out_ft))
         if bias:
             self.bias = Parameter(torch.Tensor(out_ft))
         else:
@@ -23,18 +23,17 @@ class HGNN_conv(nn.Module):
         self.reset_parameters()
 
     def reset_parameters(self):
-        stdv = 1. / math.sqrt(self.weight.size(1))#.size(1)返回列的维度
-        # .data：计算历史不被记录，
-        # uniform_:从均匀分布中抽样得到的值填充:随机指定weight的值，后续再通过反向传播修正
+        stdv = 1. / math.sqrt(self.weight.size(1))#.size(1
+
         self.weight.data.uniform_(-stdv, stdv)
-        #如果有b，则同样随机指定值
+
         if self.bias is not None:
             self.bias.data.uniform_(-stdv, stdv)
-    def forward(self, x: torch.Tensor, G: torch.Tensor):#按照一层卷积的公式计算
+    def forward(self, x: torch.Tensor, G: torch.Tensor):
         x = x.matmul(self.weight)#X×W
         if self.bias is not None:# +b
             x = x + self.bias
-        x = G.matmul(x)#GXW对应卷积中的GXθ
+        x = G.matmul(x)
         return x
 
 
